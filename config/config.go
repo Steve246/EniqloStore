@@ -5,24 +5,6 @@ import (
 	"os"
 )
 
-type ApiConfig struct {
-	Url string
-}
-
-type DbConfig struct {
-	DataSourceName string
-}
-
-type Config struct {
-	DbConfig
-	ApiConfig
-	FilePathConfig
-}
-
-type FilePathConfig struct {
-	FilePath string
-}
-
 func (c *Config) readConfig() {
 	// API Config start here
 	api := os.Getenv("API_URL")
@@ -37,7 +19,7 @@ func (c *Config) readConfig() {
 	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s TimeZone=Asia/Jakarta", dbHost, dbUser, dbPass, dbName, dbPort)
 	c.DbConfig = DbConfig{dsn}
 
-	c.FilePathConfig = FilePathConfig{FilePath: os.Getenv("FILE_PATH")}
+	// c.FilePathConfig = FilePathConfig{FilePath: os.Getenv("FILE_PATH")}
 }
 
 func InitConfig() Config {
