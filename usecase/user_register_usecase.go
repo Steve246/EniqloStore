@@ -47,16 +47,16 @@ func (p *userRegistrationUsecase) StaffRegister(reqUserData dto.RequestRegistBod
 		return model.StaffResponse{}, utils.PasswordCannotBeEncodeError()
 	}
 
-	// Get token auth
-	token, tokenErr := p.tokenRepo.CreateTokenV2(reqUserData.Name, 12)
-	if tokenErr != nil {
-		return model.StaffResponse{}, tokenErr
-	}
-
 	generateUserId, err := utils.GenerateUserID()
 
 	if err != nil {
 		return model.StaffResponse{}, err
+	}
+
+	// Get token auth
+	token, tokenErr := p.tokenRepo.CreateTokenV2(generateUserId, 12)
+	if tokenErr != nil {
+		return model.StaffResponse{}, tokenErr
 	}
 
 	// insert to database

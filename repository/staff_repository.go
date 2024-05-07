@@ -28,11 +28,12 @@ func (u *staffRepository) ValidateUser(phoneNumber string, name string, password
 		if phoneNumber == "" {
 			return utils.ReqBodyNotValidError()
 		}
+		// `^\+\d{1,3}-?\d{1,14}$`
+		// phoneRegex := `^\+(?:[0-9] ?){6,14}[0-9]$`
+		phoneRegex := `^\+\d{1,3}-?\d{1,14}$`
 
-		phoneRegex := `^\+(?:[0-9] ?){6,14}[0-9]$`
 		match, _ := regexp.MatchString(phoneRegex, phoneNumber)
 
-		fmt.Println("ini match --> ", match)
 		if !match {
 			return utils.ReqBodyNotValidError()
 		}
@@ -42,8 +43,6 @@ func (u *staffRepository) ValidateUser(phoneNumber string, name string, password
 			return utils.ReqBodyNotValidError()
 		}
 		nameLength := len(strings.TrimSpace(name))
-
-		fmt.Println("ini nameLength --> ", nameLength)
 
 		if nameLength < 5 || nameLength > 50 {
 			return utils.ReqBodyNotValidError()
@@ -66,7 +65,7 @@ func (u *staffRepository) ValidateUser(phoneNumber string, name string, password
 			return utils.ReqBodyNotValidError()
 		}
 
-		phoneRegex := `^\+(?:[0-9] ?){6,14}[0-9]$`
+		phoneRegex := `^\+\d{1,3}-?\d{1,14}$`
 		match, _ := regexp.MatchString(phoneRegex, phoneNumber)
 
 		if !match {
