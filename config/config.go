@@ -3,9 +3,18 @@ package config
 import (
 	"fmt"
 	"os"
+
+	"github.com/joho/godotenv"
 )
 
 func (c *Config) readConfig() {
+	// Load environment variables from .env file
+	err := godotenv.Load()
+	if err != nil {
+		fmt.Println("Error loading .env file:", err)
+		return
+	}
+
 	// API Config start here
 	api := os.Getenv("API_URL")
 	c.ApiConfig = ApiConfig{Url: api}
@@ -20,6 +29,12 @@ func (c *Config) readConfig() {
 	c.DbConfig = DbConfig{dsn}
 
 	// c.FilePathConfig = FilePathConfig{FilePath: os.Getenv("FILE_PATH")}
+}
+
+func NewConfig() Config {
+	cfg := Config{}
+	cfg.readConfig()
+	return cfg
 }
 
 func InitConfig() Config {

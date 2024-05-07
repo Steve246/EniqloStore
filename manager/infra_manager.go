@@ -10,11 +10,19 @@ import (
 )
 
 type Infra interface {
+	TokenConfig() config.TokenConfig
+
 	SqlDb() *gorm.DB
 }
 
 type infra struct {
+	tokenConfig config.TokenConfig
+
 	dbResource *gorm.DB
+}
+
+func (i *infra) TokenConfig() config.TokenConfig {
+	return i.tokenConfig
 }
 
 func (i *infra) SqlDb() *gorm.DB {
@@ -29,7 +37,7 @@ func NewInfra(config config.Config) Infra {
 	}
 	log.Print("Database Connected!")
 
-	return &infra{dbResource: resource} // tokenConfig: config.TokenConfig
+	return &infra{dbResource: resource, tokenConfig: config.TokenConfig} // tokenConfig: config.TokenConfig
 
 }
 

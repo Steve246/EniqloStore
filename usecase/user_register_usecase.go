@@ -2,8 +2,11 @@ package usecase
 
 import (
 	"eniqloStore/model"
+	"eniqloStore/model/dto"
 	"eniqloStore/repository"
 	"eniqloStore/utils"
+
+	"gorm.io/gorm"
 )
 
 // import (
@@ -15,25 +18,25 @@ import (
 // )
 
 type UserRegistrationUsecase interface {
-	RegisterUser(reqRegistBody model.Staff) (model.StaffResponse, error)
+	StaffRegister(reqRegistBody dto.RequestRegistBody) (model.StaffResponse, error)
 }
 
 type userRegistrationUsecase struct {
-	userRepo     repository.UserRepository
+	staffRepo    repository.StaffRepository
 	passWordRepo repository.PasswordRepository
 	tokenRepo    repository.TokenRepository
 }
 
-func (p *userRegistrationUsecase) RegisterUser(reqUserData model.Staff) (model.StaffResponse, error) {
+func (p *userRegistrationUsecase) StaffRegister(reqUserData dto.RequestRegistBody) (model.StaffResponse, error) {
 
 	// validation check request body
-	errValidate := p.userRepo.ValidateUser(reqUserData.PhoneNumber, reqUserData.Name, reqUserData.Password, "register")
+	errValidate := p.staffRepo.ValidateUser(reqUserData.PhoneNumber, reqUserData.Name, reqUserData.Password, "register")
 	if errValidate != nil {
 		return model.StaffResponse{}, errValidate
 	}
 
 	// validation check email already registered
-	exist := p.userRepo.FindByPhone(reqUserData.PhoneNumber)
+	exist := p.staffRepo.FindByPhone(reqUserData.PhoneNumber)
 	if exist {
 		return model.StaffResponse{}, utils.EmailFoundError()
 	}
@@ -50,37 +53,39 @@ func (p *userRegistrationUsecase) RegisterUser(reqUserData model.Staff) (model.S
 		return model.StaffResponse{}, tokenErr
 	}
 
-	// insert to database
-	err := p.userRepo.Register("staffdata", model.Staff{
-		Name:     reqUserData.Name,
-		Password: hashedPasswordStr,
-		UserID:   "3",
-		// RegistrationDate: time.Now().Format("2006-01-02 15:04:05"),
-	})
-
-	if err != nil {
-		return model.StaffResponse{}, err
-	}
-
 	generateUserId, err := utils.GenerateUserID()
 
 	if err != nil {
 		return model.StaffResponse{}, err
 	}
 
+	// insert to database
+	errInsert := p.staffRepo.Register("staffdata", model.Staff{
+		Model:       gorm.Model{},
+		UserID:      generateUserId,
+		Name:        reqUserData.Name,
+		PhoneNumber: reqUserData.PhoneNumber,
+		Password:    hashedPasswordStr,
+	})
+
+	if errInsert != nil {
+		return model.StaffResponse{}, errInsert
+
+	}
+
 	responseData := model.StaffResponse{
 		UserID:      generateUserId,
 		Name:        reqUserData.Name,
-		PhoneNumber: "+6281711818",
+		PhoneNumber: reqUserData.PhoneNumber,
 		AccessToken: token,
 	}
 
 	return responseData, nil
 }
 
-func NewUserRegistrationUsecase(userRepo repository.UserRepository, passWordRepo repository.PasswordRepository, tokenRepo repository.TokenRepository) UserRegistrationUsecase {
+func NewUserRegistrationUsecase(staffRepo repository.StaffRepository, passWordRepo repository.PasswordRepository, tokenRepo repository.TokenRepository) UserRegistrationUsecase {
 	usecase := new(userRegistrationUsecase)
-	usecase.userRepo = userRepo
+	usecase.staffRepo = staffRepo
 	usecase.passWordRepo = passWordRepo
 	usecase.tokenRepo = tokenRepo
 
