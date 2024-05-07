@@ -5,13 +5,17 @@ import (
 )
 
 type UsecaseManager interface {
+	LoginUsecase() usecase.UserLoginUsecase
 	TokenUsecase() usecase.TokenUsecase
-
 	RegisterUsecase() usecase.UserRegistrationUsecase
 }
 
 type usecaseManager struct {
 	repoManager RepositoryManager
+}
+
+func (u *usecaseManager) LoginUsecase() usecase.UserLoginUsecase {
+	return usecase.NewUserLoginUsecase(u.repoManager.TokenRepo(), u.repoManager.StaffRepo(), u.repoManager.PasswordRepo())
 }
 
 func (u *usecaseManager) TokenUsecase() usecase.TokenUsecase {

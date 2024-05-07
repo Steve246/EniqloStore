@@ -4,7 +4,6 @@ import (
 	"eniqloStore/model"
 	"eniqloStore/utils"
 	"errors"
-	"fmt"
 	"regexp"
 	"strings"
 
@@ -98,9 +97,8 @@ func (u *staffRepository) FindPasswordByPhoneNumber(phoneNumber string) (model.S
 }
 
 func (u *staffRepository) Register(tableName string, data model.Staff) error {
-	result := u.db.Exec("INSERT INTO "+tableName+" (created_at, updated_at, name, password, user_unique_id, phone_number) VALUES (?, ?, ?, ?, ?, ?)", data.CreatedAt, data.UpdatedAt, data.Name, data.Password, data.UserID, data.PhoneNumber)
+	result := u.db.Exec("INSERT INTO "+tableName+" (created_at, updated_at, name, password, user_unique_id, phone_number) VALUES (?, ?, ?, ?, ?, ?)", data.CreatedAt, data.UpdatedAt, data.Name, data.Password, data.UserUniqueID, data.PhoneNumber)
 
-	fmt.Println("ini result --> ", result)
 	return result.Error
 }
 

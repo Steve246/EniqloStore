@@ -5,3 +5,8 @@ type RequestRegistBody struct {
 	Name        string `json:"name"`
 	Password    string `json:"password"`
 }
+
+type RequestLoginBody struct {
+	PhoneNumber string `json:"phoneNumber"`
+	Password    string `json:"password"`
+}

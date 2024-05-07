@@ -9,14 +9,6 @@ import (
 	"gorm.io/gorm"
 )
 
-// import (
-// 	"7Zero4/model"
-// 	"7Zero4/model/dto"
-// 	"7Zero4/repository"
-// 	"7Zero4/utils"
-// 	"time"
-// )
-
 type UserRegistrationUsecase interface {
 	StaffRegister(reqRegistBody dto.RequestRegistBody) (model.StaffResponse, error)
 }
@@ -61,11 +53,11 @@ func (p *userRegistrationUsecase) StaffRegister(reqUserData dto.RequestRegistBod
 
 	// insert to database
 	errInsert := p.staffRepo.Register("staffdata", model.Staff{
-		Model:       gorm.Model{},
-		UserID:      generateUserId,
-		Name:        reqUserData.Name,
-		PhoneNumber: reqUserData.PhoneNumber,
-		Password:    hashedPasswordStr,
+		Model:        gorm.Model{},
+		UserUniqueID: generateUserId,
+		Name:         reqUserData.Name,
+		PhoneNumber:  reqUserData.PhoneNumber,
+		Password:     hashedPasswordStr,
 	})
 
 	if errInsert != nil {
@@ -74,10 +66,10 @@ func (p *userRegistrationUsecase) StaffRegister(reqUserData dto.RequestRegistBod
 	}
 
 	responseData := model.StaffResponse{
-		UserID:      generateUserId,
-		Name:        reqUserData.Name,
-		PhoneNumber: reqUserData.PhoneNumber,
-		AccessToken: token,
+		UserUniqueID: generateUserId,
+		Name:         reqUserData.Name,
+		PhoneNumber:  reqUserData.PhoneNumber,
+		AccessToken:  token,
 	}
 
 	return responseData, nil
