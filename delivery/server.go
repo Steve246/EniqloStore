@@ -11,17 +11,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// import (
-// 	"7Zero4/config"
-// 	"7Zero4/delivery/controller"
-// 	"7Zero4/delivery/middleware"
-// 	"7Zero4/manager"
-// 	"time"
-
-// 	"github.com/gin-contrib/cors"
-// 	"github.com/gin-gonic/gin"
-// )
-
 type appServer struct {
 	usecaseManager manager.UsecaseManager
 	router         *gin.RouterGroup
@@ -66,6 +55,8 @@ func (a *appServer) initControllers() {
 	// buat daftarin controller ada disini
 	// setiap controller, isinya harus ada isian dari usecaseManager
 	controller.NewUserController(a.router, a.routerDev, a.usecaseManager.RegisterUsecase(), a.usecaseManager.LoginUsecase())
+
+	controller.NewProductController(a.router, a.routerDev, a.usecaseManager.ProductUsecase())
 }
 
 func (a *appServer) Run() {

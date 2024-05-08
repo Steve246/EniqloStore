@@ -15,6 +15,15 @@ func (e AppError) Error() string {
 	return fmt.Sprintf("type: %d, code: %s, err: %s", e.ErrorType, e.ErrorCode, e.ErrorMessage)
 }
 
+// product
+func CreateProductError() error {
+	return AppError{
+		ErrorCode:    "400",
+		ErrorMessage: "Create Product Failed",
+		ErrorType:    http.StatusConflict,
+	}
+}
+
 // register
 func EmailFoundError() error {
 	return AppError{
