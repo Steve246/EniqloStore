@@ -5,7 +5,6 @@ import (
 	"eniqloStore/config"
 	"eniqloStore/model/dto"
 	"errors"
-	"fmt"
 	"math/rand"
 
 	"time"
@@ -40,12 +39,11 @@ func (t *tokenRepository) CreateTokenV2(user_unique_id string, length int) (stri
 	return token, nil
 }
 
-func (t *tokenRepository) VerifyTokenV2(user_unique_id string) (bool, error) {
+func (t *tokenRepository) VerifyTokenV2(token_string string) (bool, error) {
 	var userData dto.UserData
 
-	fmt.Println("VerifyTokenV2")
-	result := t.db.Raw(`SELECT user_unique_id, expire FROM authentication WHERE token_auth = ? ORDER BY expire DESC LIMIT 1`, user_unique_id).Scan(&userData)
-	fmt.Println(userData)
+	result := t.db.Raw(`SELECT user_unique_id, expire FROM authentication WHERE token_auth = ? ORDER BY expire DESC LIMIT 1`, token_string).Scan(&userData)
+
 	if result.Error != nil {
 		return false, result.Error
 	}

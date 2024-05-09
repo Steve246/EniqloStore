@@ -4,6 +4,7 @@ import (
 	"eniqloStore/model/dto"
 	"eniqloStore/repository"
 	"eniqloStore/utils"
+	"fmt"
 )
 
 type ProductUsecase interface {
@@ -16,7 +17,7 @@ type productUsecase struct {
 
 func (p *productUsecase) CreateProduct(data dto.RequestProduct) (dto.ProductInfo, error) {
 	validation := p.productRepo.ValidateProduct(data)
-
+	fmt.Println("ini hasil validasi --> ", validation)
 	if !validation {
 		return dto.ProductInfo{}, utils.ReqBodyNotValidError()
 	}

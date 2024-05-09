@@ -5,6 +5,7 @@ import (
 	"eniqloStore/model/dto"
 	"eniqloStore/usecase"
 	"eniqloStore/utils"
+	"fmt"
 
 	"github.com/gin-gonic/gin"
 )
@@ -18,12 +19,15 @@ type ProductController struct {
 
 func (u *ProductController) createProduct(c *gin.Context) {
 	var bodyRequest dto.RequestProduct
+	fmt.Println("berhasil masuk create Produt")
 	if err := u.ParseRequestBody(c, &bodyRequest); err != nil {
 		u.Failed(c, utils.ReqBodyNotValidError())
 		return
 	}
 
 	data, createProducErr := u.ucProduct.CreateProduct(bodyRequest)
+
+	fmt.Println("ini isi data --> ", data)
 
 	if createProducErr != nil {
 		if createProducErr == utils.CreateProductError() {
@@ -34,11 +38,12 @@ func (u *ProductController) createProduct(c *gin.Context) {
 
 		u.Failed(c, utils.ServerError())
 
+	} else {
+		detailMsg := "User logged successfully "
+
+		u.Success(c, data, detailMsg, "")
 	}
 
-	detailMsg := "User logged successfully "
-
-	u.Success(c, data, detailMsg, "")
 }
 
 func NewProductController(router *gin.RouterGroup, routerDev *gin.RouterGroup, ucProduct usecase.ProductUsecase) *ProductController {
