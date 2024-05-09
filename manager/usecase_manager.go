@@ -5,6 +5,7 @@ import (
 )
 
 type UsecaseManager interface {
+	ProductUsecase() usecase.ProductUsecase
 	LoginUsecase() usecase.UserLoginUsecase
 	TokenUsecase() usecase.TokenUsecase
 	RegisterUsecase() usecase.UserRegistrationUsecase
@@ -12,6 +13,10 @@ type UsecaseManager interface {
 
 type usecaseManager struct {
 	repoManager RepositoryManager
+}
+
+func (u *usecaseManager) ProductUsecase() usecase.ProductUsecase {
+	return usecase.NewProductUsecase(u.repoManager.ProductRepo())
 }
 
 func (u *usecaseManager) LoginUsecase() usecase.UserLoginUsecase {

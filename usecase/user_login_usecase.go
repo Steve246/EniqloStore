@@ -34,8 +34,6 @@ func (u *userLoginUsecase) StaffLogin(reqLoginBody dto.RequestLoginBody) (model.
 		return model.StaffResponse{}, utils.PasswordWrongError()
 	}
 
-	// TODO: kalau udh register, dan masih ada token aktif dia gak create
-
 	// Get token auth
 	token, tokenErr := u.tokenRepo.CreateTokenV2(dbPass.UserUniqueID, 12)
 	if tokenErr != nil {

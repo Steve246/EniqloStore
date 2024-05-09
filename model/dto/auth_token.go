@@ -6,6 +6,6 @@ type AuthToken struct {
 }
 
 type UserData struct {
-	Email  string `gorm:"column:user_email"`
-	Expire string `gorm:"column:expire"`
+	UserUniqueId string `gorm:"column:user_unique_id"`
+	Expire       string `gorm:"column:expire"`
 }

@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"eniqloStore/usecase"
+	"fmt"
 	"net/http"
 	"strings"
 
@@ -67,6 +68,7 @@ func (a *authTokenMiddleware) RequiredToken() gin.HandlerFunc {
 			}
 
 			pass, err := a.tokenUsecase.VerifyAccessToken(tokenString)
+			fmt.Println("ini hasilnya token --> ", pass)
 			if err != nil || !pass {
 				c.JSON(http.StatusUnauthorized, gin.H{
 					"message": "Unauthorized",

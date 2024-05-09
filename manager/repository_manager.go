@@ -3,9 +3,14 @@ package manager
 import "eniqloStore/repository"
 
 type RepositoryManager interface {
+	ProductRepo() repository.ProductRepository
 	TokenRepo() repository.TokenRepository
 	StaffRepo() repository.StaffRepository
 	PasswordRepo() repository.PasswordRepository
+}
+
+func (r *repositoryManager) ProductRepo() repository.ProductRepository {
+	return repository.NewProductRepository(r.infra.SqlDb())
 }
 
 func (r *repositoryManager) TokenRepo() repository.TokenRepository {
