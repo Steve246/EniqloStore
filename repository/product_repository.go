@@ -11,6 +11,7 @@ import (
 )
 
 type ProductRepository interface {
+	GetProduct()
 	FindIdCreatedAtBy(requestData dto.RequestProduct) (model.ProductList, error)
 	InsertProduct(requestData dto.RequestProduct) error
 	ValidateProduct(requestData dto.RequestProduct) bool
@@ -21,6 +22,10 @@ type productdRepository struct {
 }
 
 // TODO: NAMBAIN SATU REPO UNTUK DAPETIN ID DAN CREATED_AT KAPAN
+
+func (p *productdRepository) GetProduct() {
+
+}
 
 func (p *productdRepository) FindIdCreatedAtBy(requestData dto.RequestProduct) (model.ProductList, error) {
 
