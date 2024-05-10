@@ -25,7 +25,7 @@ func (u *ProductController) getProduct(c *gin.Context) {
 	name := c.Query("name")
 	limit := utils.StringToInt(c.DefaultQuery("limit", "5"))
 	offset := utils.StringToInt(c.DefaultQuery("offset", "0"))
-	isAvailable := c.Query("isAvailable")
+	isAvailable := c.Query("isavailable")
 	category := c.Query("category")
 	sku := c.Query("sku")
 	price := c.Query("price")

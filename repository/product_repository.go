@@ -5,6 +5,7 @@ import (
 	"eniqloStore/model/dto"
 	"eniqloStore/utils"
 	"errors"
+	"fmt"
 	"net/url"
 	"strings"
 
@@ -41,8 +42,9 @@ func (p *productdRepository) GetProduct(getReqdata dto.ProductQueryParams) ([]mo
 	}
 
 	// Filter by availability
+	fmt.Println("ini isAvailable --> ", getReqdata.IsAvailable)
 	if getReqdata.IsAvailable == "true" || getReqdata.IsAvailable == "false" {
-		query += " AND is_available = " + getReqdata.IsAvailable
+		query += " AND isavailable = " + getReqdata.IsAvailable
 	}
 
 	// Filter by category
@@ -51,9 +53,12 @@ func (p *productdRepository) GetProduct(getReqdata dto.ProductQueryParams) ([]mo
 	}
 
 	// Filter by SKU
+	fmt.Println("ini dapet data SKU --> ", getReqdata.SKU)
 	if getReqdata.SKU != "" {
 		query += " AND sku = '" + getReqdata.SKU + "'"
 	}
+
+	fmt.Println("ini dapet data stock --> ", getReqdata.InStock)
 
 	// Filter by inStock
 	if getReqdata.InStock == "true" {

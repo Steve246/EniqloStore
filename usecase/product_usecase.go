@@ -25,7 +25,7 @@ type productUsecase struct {
 
 func (p *productUsecase) GetProduct(data dto.ProductQueryParams) ([]dto.ResponseGetProduct, error) {
 	// Call the repository to get the list of products
-
+	fmt.Println("ini isi getAvailable --> ", data.IsAvailable)
 	products, err := p.productRepo.GetProduct(data)
 	if err != nil {
 		return nil, utils.GetProductError()
