@@ -28,7 +28,7 @@ type productdRepository struct {
 func (p *productdRepository) GetProduct(getReqdata dto.ProductQueryParams) ([]model.ProductList, error) {
 	var products []model.ProductList
 
-	query := "SELECT * FROM products WHERE 1=1"
+	query := "SELECT * FROM productlist WHERE 1=1"
 
 	// Filter by ID
 	if getReqdata.ID != "" {

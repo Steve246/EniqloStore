@@ -28,7 +28,7 @@ type ProductQueryParams struct {
 	Name        string `form:"name"`
 	Limit       int    `form:"limit,default=5"`
 	Offset      int    `form:"offset,default=0"`
-	IsAvailable string `form:"isAvailable"`
+	IsAvailable string `form:"isavailable"`
 	Category    string `form:"category"`
 	SKU         string `form:"sku"`
 	Price       string `form:"price"`
