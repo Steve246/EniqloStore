@@ -119,6 +119,8 @@ func NewProductController(router *gin.RouterGroup, routerDev *gin.RouterGroup, u
 		BaseApi: api.BaseApi{},
 	}
 
+	router.GET("/v1/product/customer", controller.searchProduct)
+
 	router.GET("/v1/product", controller.getProduct)
 
 	router.POST("/v1/product", controller.createProduct)
