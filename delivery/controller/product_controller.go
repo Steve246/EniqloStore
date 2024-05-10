@@ -46,6 +46,17 @@ func (u *ProductController) createProduct(c *gin.Context) {
 
 }
 
+func (u *ProductController) searchProduct(c *gin.Context) {
+	requestParams := c.Request.URL.Query()
+	res, err := u.ucProduct.SearchProduct(requestParams)
+	if err != nil {
+		u.Failed(c, err)
+		return
+	}
+
+	u.Success(c, res, "success", "")
+}
+
 func NewProductController(router *gin.RouterGroup, routerDev *gin.RouterGroup, ucProduct usecase.ProductUsecase) *ProductController {
 	controller := ProductController{
 		router:    router,
@@ -57,8 +68,7 @@ func NewProductController(router *gin.RouterGroup, routerDev *gin.RouterGroup, u
 	}
 
 	router.POST("/v1/create", controller.createProduct)
-
-	// router.POST("/v1/staff/login", controller.userLogin)
+	router.GET("/v1/product/customer", controller.searchProduct)
 
 	return &controller
 }

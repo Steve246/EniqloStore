@@ -7,16 +7,6 @@ import (
 	"github.com/golang-jwt/jwt"
 )
 
-// import (
-// 	"7Zero4/model/dto"
-// 	"7Zero4/repository"
-// 	"log"
-
-// 	"strconv"
-
-// 	"github.com/golang-jwt/jwt"
-// )
-
 type TokenUsecase interface {
 	VerifyAccessToken(tokenString string) (bool, error)
 }

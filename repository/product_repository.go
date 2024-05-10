@@ -15,6 +15,7 @@ type ProductRepository interface {
 	FindIdCreatedAtBy(requestData dto.RequestProduct) (model.ProductList, error)
 	InsertProduct(requestData dto.RequestProduct) error
 	ValidateProduct(requestData dto.RequestProduct) bool
+	SearchProduct(params map[string]string) ([]model.ProductList, error)
 }
 
 type productdRepository struct {
@@ -106,6 +107,45 @@ func (p *productdRepository) ValidateProduct(requestData dto.RequestProduct) boo
 	}
 
 	return true
+}
+
+func generateLikeQuery(params string) string {
+	result := "%" + params + "%"
+	return result
+}
+
+func generateQuery(params map[string]string) string {
+	var result string
+	if category, ok := params["category"]; ok {
+		result += " AND category = " + "'" + category + "'"
+	}
+
+	if sku, ok := params["sku"]; ok && params["sku"] != "" {
+		result += " AND sku = " + "'" + sku + "'"
+	}
+
+	if params["inStock"] == "true" {
+		result += " AND stock > 0"
+	}
+
+	if params["price"] == "asc" {
+		result += " ORDER BY price ASC"
+	} else if params["price"] == "desc" {
+		result += " ORDER BY price DESC"
+	} else {
+		result += " ORDER BY created_at ASC"
+	}
+
+	result += " LIMIT " + params["limit"] + " OFFSET " + params["offset"]
+
+	return result
+}
+
+func (p *productdRepository) SearchProduct(params map[string]string) ([]model.ProductList, error) {
+	var product []model.ProductList
+	additionalQuery := generateQuery(params)
+	result := p.db.Raw(`SELECT id,name,sku,category,imageUrl,stock,price,location,created_at FROM productlist WHERE LOWER(name) LIKE ?`+additionalQuery, generateLikeQuery(params["name"])).Scan(&product)
+	return product, result.Error
 }
 
 func NewProductRepository(db *gorm.DB) ProductRepository {

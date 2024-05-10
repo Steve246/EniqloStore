@@ -58,15 +58,12 @@ func NewUserController(router *gin.RouterGroup, routerDev *gin.RouterGroup, ucRe
 	controller := UserController{
 		router:    router,
 		routerDev: routerDev,
-
-		ucRegist: ucRegist,
-		ucLogin:  ucLogin,
-
-		BaseApi: api.BaseApi{},
+		ucRegist:  ucRegist,
+		ucLogin:   ucLogin,
+		BaseApi:   api.BaseApi{},
 	}
 
 	router.POST("/v1/staff/register", controller.userRegister)
-
 	router.POST("/v1/staff/login", controller.userLogin)
 
 	return &controller
