@@ -16,6 +16,15 @@ func (e AppError) Error() string {
 }
 
 // product
+
+func GetProductError() error {
+	return AppError{
+		ErrorCode:    "400",
+		ErrorMessage: "Get Product Failed",
+		ErrorType:    http.StatusConflict,
+	}
+}
+
 func CreateProductError() error {
 	return AppError{
 		ErrorCode:    "400",
