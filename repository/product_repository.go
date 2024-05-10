@@ -6,12 +6,13 @@ import (
 	"eniqloStore/utils"
 	"errors"
 	"net/url"
+	"strings"
 
 	"gorm.io/gorm"
 )
 
 type ProductRepository interface {
-	GetProduct()
+	GetProduct(getReqdata dto.ProductQueryParams) ([]model.ProductList, error)
 	FindIdCreatedAtBy(requestData dto.RequestProduct) (model.ProductList, error)
 	InsertProduct(requestData dto.RequestProduct) error
 	ValidateProduct(requestData dto.RequestProduct) bool
@@ -24,8 +25,65 @@ type productdRepository struct {
 
 // TODO: NAMBAIN SATU REPO UNTUK DAPETIN ID DAN CREATED_AT KAPAN
 
-func (p *productdRepository) GetProduct() {
+func (p *productdRepository) GetProduct(getReqdata dto.ProductQueryParams) ([]model.ProductList, error) {
+	var products []model.ProductList
 
+	query := "SELECT * FROM products WHERE 1=1"
+
+	// Filter by ID
+	if getReqdata.ID != "" {
+		query += " AND id = '" + getReqdata.ID + "'"
+	}
+
+	// Filter by name
+	if getReqdata.Name != "" {
+		query += " AND LOWER(name) LIKE '%" + strings.ToLower(getReqdata.Name) + "%'"
+	}
+
+	// Filter by availability
+	if getReqdata.IsAvailable == "true" || getReqdata.IsAvailable == "false" {
+		query += " AND is_available = " + getReqdata.IsAvailable
+	}
+
+	// Filter by category
+	if getReqdata.IsAvailable != "" {
+		query += " AND category = '" + getReqdata.IsAvailable + "'"
+	}
+
+	// Filter by SKU
+	if getReqdata.SKU != "" {
+		query += " AND sku = '" + getReqdata.SKU + "'"
+	}
+
+	// Filter by inStock
+	if getReqdata.InStock == "true" {
+		query += " AND stock > 0"
+	} else if getReqdata.InStock == "false" {
+		query += " AND stock = 0"
+	}
+
+	// Sorting by price
+	if getReqdata.Price == "asc" {
+		query += " ORDER BY price ASC"
+	} else if getReqdata.Price == "desc" {
+		query += " ORDER BY price DESC"
+	}
+
+	// Sorting by createdAt
+	if getReqdata.CreatedAt == "asc" {
+		query += " ORDER BY created_at ASC"
+	} else if getReqdata.CreatedAt == "desc" {
+		query += " ORDER BY created_at DESC"
+	}
+
+	// Limit and offset
+	query += " LIMIT " + utils.IntToString(getReqdata.Limit) + " OFFSET " + utils.IntToString(getReqdata.Offset)
+
+	if err := p.db.Raw(query).Scan(&products).Error; err != nil {
+		return nil, err
+	}
+
+	return products, nil
 }
 
 func (p *productdRepository) FindIdCreatedAtBy(requestData dto.RequestProduct) (model.ProductList, error) {

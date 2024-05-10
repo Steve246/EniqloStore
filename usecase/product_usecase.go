@@ -11,6 +11,7 @@ import (
 )
 
 type ProductUsecase interface {
+	GetProduct(data dto.ProductQueryParams) ([]dto.ResponseGetProduct, error)
 	CreateProduct(data dto.RequestProduct) (dto.ProductInfo, error)
 	SearchProduct(params url.Values) ([]model.ProductList, error)
 }
@@ -20,6 +21,36 @@ type productUsecase struct {
 	categoryEnum map[string]struct{}
 	priceEnum    map[string]struct{}
 	inStockEnum  map[string]struct{}
+}
+
+func (p *productUsecase) GetProduct(data dto.ProductQueryParams) ([]dto.ResponseGetProduct, error) {
+	// Call the repository to get the list of products
+
+	products, err := p.productRepo.GetProduct(data)
+	if err != nil {
+		return nil, utils.GetProductError()
+	}
+
+	// Map products to dto.ResponseGetProduct
+	var responseProducts []dto.ResponseGetProduct
+	for _, product := range products {
+		responseProduct := dto.ResponseGetProduct{
+			ID:          product.ID,
+			Name:        product.Name,
+			SKU:         product.SKU,
+			Category:    product.Category,
+			ImageURL:    product.ImageURL,
+			Notes:       product.Notes,
+			Price:       product.Price,
+			Stock:       product.Stock,
+			Location:    product.Location,
+			IsAvailable: product.IsAvailable,
+			CreatedAt:   product.CreatedAt,
+		}
+		responseProducts = append(responseProducts, responseProduct)
+	}
+
+	return responseProducts, nil
 }
 
 func (p *productUsecase) CreateProduct(data dto.RequestProduct) (dto.ProductInfo, error) {
