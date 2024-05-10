@@ -17,6 +17,22 @@ type ProductController struct {
 	api.BaseApi
 }
 
+func (u *ProductController) delProduct(c *gin.Context) {
+	id := c.Param("id")
+
+	err := u.ucProduct.DeleteProduct(id)
+
+	if err != nil {
+		u.Failed(c, err)
+		return
+	}
+
+	detailMsg := "Succesfully Delete Product"
+
+	u.Success(c, "", detailMsg, "")
+
+}
+
 func (u *ProductController) getProduct(c *gin.Context) {
 
 	// requestParams := c.Request.URL.Query()
@@ -118,6 +134,8 @@ func NewProductController(router *gin.RouterGroup, routerDev *gin.RouterGroup, u
 
 		BaseApi: api.BaseApi{},
 	}
+
+	router.DELETE("/v1/product/:id", controller.delProduct)
 
 	router.GET("/v1/product/customer", controller.searchProduct)
 

@@ -17,6 +17,14 @@ func (e AppError) Error() string {
 
 // product
 
+func ProductsNotFound() error {
+	return AppError{
+		ErrorCode:    "404",
+		ErrorMessage: "id is not found",
+		ErrorType:    http.StatusNotFound,
+	}
+}
+
 func GetProductError() error {
 	return AppError{
 		ErrorCode:    "400",

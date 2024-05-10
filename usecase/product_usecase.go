@@ -11,6 +11,7 @@ import (
 )
 
 type ProductUsecase interface {
+	DeleteProduct(id string) error
 	GetProduct(data dto.ProductQueryParams) ([]dto.ResponseGetProduct, error)
 	CreateProduct(data dto.RequestProduct) (dto.ProductInfo, error)
 	SearchProduct(params url.Values) ([]model.ProductList, error)
@@ -21,6 +22,16 @@ type productUsecase struct {
 	categoryEnum map[string]struct{}
 	priceEnum    map[string]struct{}
 	inStockEnum  map[string]struct{}
+}
+
+func (p *productUsecase) DeleteProduct(id string) error {
+	err := p.productRepo.DeleteProduct(id)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (p *productUsecase) GetProduct(data dto.ProductQueryParams) ([]dto.ResponseGetProduct, error) {

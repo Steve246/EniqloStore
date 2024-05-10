@@ -13,6 +13,7 @@ import (
 )
 
 type ProductRepository interface {
+	DeleteProduct(id string) error
 	GetProduct(getReqdata dto.ProductQueryParams) ([]model.ProductList, error)
 	FindIdCreatedAtBy(requestData dto.RequestProduct) (model.ProductList, error)
 	InsertProduct(requestData dto.RequestProduct) error
@@ -24,7 +25,13 @@ type productdRepository struct {
 	db *gorm.DB
 }
 
-// TODO: NAMBAIN SATU REPO UNTUK DAPETIN ID DAN CREATED_AT KAPAN
+func (p *productdRepository) DeleteProduct(id string) error {
+	result := p.db.Exec("DELETE FROM productlist WHERE id = ?", id)
+	if result.RowsAffected == 0 {
+		return utils.ProductsNotFound()
+	}
+	return nil
+}
 
 func (p *productdRepository) GetProduct(getReqdata dto.ProductQueryParams) ([]model.ProductList, error) {
 	var products []model.ProductList
