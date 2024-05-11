@@ -11,6 +11,7 @@ import (
 )
 
 type ProductUsecase interface {
+	UpdateProduct(requestData dto.RequestProduct, id string) error
 	DeleteProduct(id string) error
 	GetProduct(data dto.ProductQueryParams) ([]dto.ResponseGetProduct, error)
 	CreateProduct(data dto.RequestProduct) (dto.ProductInfo, error)
@@ -22,6 +23,16 @@ type productUsecase struct {
 	categoryEnum map[string]struct{}
 	priceEnum    map[string]struct{}
 	inStockEnum  map[string]struct{}
+}
+
+func (p *productUsecase) UpdateProduct(requestData dto.RequestProduct, id string) error {
+	err := p.productRepo.UpdateProduct(requestData, id)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (p *productUsecase) DeleteProduct(id string) error {

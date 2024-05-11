@@ -17,6 +17,33 @@ type ProductController struct {
 	api.BaseApi
 }
 
+func (u *ProductController) UpdateProduct(c *gin.Context) {
+	var bodyRequest dto.RequestProduct
+	id := c.Param("id")
+
+	if err := u.ParseRequestBody(c, &bodyRequest); err != nil {
+		u.Failed(c, utils.ReqBodyNotValidError())
+		return
+	}
+
+	err := u.ucProduct.UpdateProduct(bodyRequest, id)
+
+	if err != nil {
+		if err == utils.CreateProductError() {
+
+			u.Failed(c, err)
+
+		}
+
+		u.Failed(c, utils.ServerError())
+
+	} else {
+		detailMsg := "successfully edit product"
+
+		u.Success(c, "", detailMsg, "")
+	}
+}
+
 func (u *ProductController) delProduct(c *gin.Context) {
 	id := c.Param("id")
 
@@ -87,15 +114,13 @@ func (u *ProductController) getProduct(c *gin.Context) {
 
 func (u *ProductController) createProduct(c *gin.Context) {
 	var bodyRequest dto.RequestProduct
-	fmt.Println("berhasil masuk create Produt")
+
 	if err := u.ParseRequestBody(c, &bodyRequest); err != nil {
 		u.Failed(c, utils.ReqBodyNotValidError())
 		return
 	}
 
 	data, createProducErr := u.ucProduct.CreateProduct(bodyRequest)
-
-	fmt.Println("ini isi data --> ", data)
 
 	if createProducErr != nil {
 		if createProducErr == utils.CreateProductError() {
@@ -134,6 +159,8 @@ func NewProductController(router *gin.RouterGroup, routerDev *gin.RouterGroup, u
 
 		BaseApi: api.BaseApi{},
 	}
+
+	router.PUT("/v1/product/:id", controller.UpdateProduct)
 
 	router.DELETE("/v1/product/:id", controller.delProduct)
 

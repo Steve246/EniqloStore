@@ -27,7 +27,7 @@ type productdRepository struct {
 }
 
 func (p *productdRepository) UpdateProduct(requestData dto.RequestProduct, id string) error {
-	result := p.db.Exec("UPDATE products SET name = ?, sku = ?, category = ?, notes = ?, imageUrl = ?, price = ?, stock = ?, location = ?, isAvailable = ? WHERE id = ?", requestData.Name, requestData.SKU, requestData.Category, requestData.Notes, requestData.ImageURL, requestData.Price, requestData.Stock, requestData.Location, requestData.IsAvailable, id)
+	result := p.db.Exec("UPDATE productlist SET name = ?, sku = ?, category = ?, notes = ?, imageUrl = ?, price = ?, stock = ?, location = ?, isavailable = ? WHERE id = ?", requestData.Name, requestData.SKU, requestData.Category, requestData.Notes, requestData.ImageURL, requestData.Price, requestData.Stock, requestData.Location, requestData.IsAvailable, id)
 	if result.RowsAffected == 0 {
 		return utils.GetProductError()
 	}
@@ -58,7 +58,6 @@ func (p *productdRepository) GetProduct(getReqdata dto.ProductQueryParams) ([]mo
 	}
 
 	// Filter by availability
-	fmt.Println("ini isAvailable --> ", getReqdata.IsAvailable)
 	if getReqdata.IsAvailable == "true" || getReqdata.IsAvailable == "false" {
 		query += " AND isavailable = " + getReqdata.IsAvailable
 	}
