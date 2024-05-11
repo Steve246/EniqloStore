@@ -57,11 +57,11 @@ Uniqlo offers the following features:
 - **Search SKU**:
   - Get All Product from Customer
 
-- **Checkout (Coming Soon)**:
+- **Checkout**:
   - Customer registration
   - Get All customer data
   - Customer Checkout
-  - Customer Checkout History
+  - Customer Checkout History (Coming Soon)
 
 ## 💾Database Migration
 
