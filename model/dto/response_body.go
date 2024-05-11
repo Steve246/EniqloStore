@@ -15,3 +15,9 @@ type ResponseGetProduct struct {
 	IsAvailable bool      `gorm:"not null"`
 	CreatedAt   time.Time `gorm:"autoCreateTime"`
 }
+
+type CustomerResponse struct {
+	UserUniqueID string `json:"userId"`
+	Name         string `gorm:"unique" json:"name"`
+	PhoneNumber  string `json:"phoneNumber"`
+}

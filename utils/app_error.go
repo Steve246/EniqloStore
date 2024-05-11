@@ -15,6 +15,24 @@ func (e AppError) Error() string {
 	return fmt.Sprintf("type: %d, code: %s, err: %s", e.ErrorType, e.ErrorCode, e.ErrorMessage)
 }
 
+// customer
+
+func CreateCustomerError() error {
+	return AppError{
+		ErrorCode:    "400",
+		ErrorMessage: "Create Customer Failed",
+		ErrorType:    http.StatusConflict,
+	}
+}
+
+func GetCustomerError() error {
+	return AppError{
+		ErrorCode:    "400",
+		ErrorMessage: "No Customer Found",
+		ErrorType:    http.StatusConflict,
+	}
+}
+
 // product
 
 func ProductsNotFound() error {
@@ -42,10 +60,10 @@ func CreateProductError() error {
 }
 
 // register
-func EmailFoundError() error {
+func PhoneNumberFoundError() error {
 	return AppError{
 		ErrorCode:    "409",
-		ErrorMessage: "Email found inside Database",
+		ErrorMessage: "Phone Number found inside Database",
 		ErrorType:    http.StatusConflict,
 	}
 }

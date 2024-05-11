@@ -11,6 +11,11 @@ type RequestLoginBody struct {
 	Password    string `json:"password"`
 }
 
+type RequestCustomerRegistBody struct {
+	Name        string `json:"name"`
+	PhoneNumber string `json:"phoneNumber"`
+}
+
 type RequestProduct struct {
 	Name        string `json:"name"`
 	SKU         string `json:"sku"`
@@ -34,4 +39,18 @@ type ProductQueryParams struct {
 	Price       string `form:"price"`
 	InStock     string `form:"inStock"`
 	CreatedAt   string `form:"createdAt"`
+}
+
+// CheckoutRequest struct represents the request payload for checkout
+type CheckoutRequest struct {
+	CustomerID     string    `json:"customerId"`
+	ProductDetails []Product `json:"productDetails"`
+	Paid           int       `json:"paid"`
+	Change         int       `json:"change"`
+}
+
+// Product struct represents the product details
+type Product struct {
+	ProductID string `json:"productId"`
+	Quantity  int    `json:"quantity"`
 }

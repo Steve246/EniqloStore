@@ -31,3 +31,13 @@ CREATE TABLE ProductList (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     deleted_at TIMESTAMP
 );
+
+CREATE TABLE customerData (
+    id SERIAL PRIMARY KEY,
+    user_unique_id varchar(255) NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    phone_number VARCHAR(255) NOT NULL, 
+    created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+    updated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+    deleted_at TIMESTAMP WITHOUT TIME ZONE
+);

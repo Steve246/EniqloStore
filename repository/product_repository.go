@@ -13,6 +13,15 @@ import (
 )
 
 type ProductRepository interface {
+
+	//product CRUD by customer
+
+	DecreaseStock(productID string, quantity int) error
+	CheckAvailability(productID string) (bool, error)
+	GetProductPrice(productID string) (int, error)
+
+	//product CRUD
+
 	UpdateProduct(requestData dto.RequestProduct, id string) error
 	DeleteProduct(id string) error
 	GetProduct(getReqdata dto.ProductQueryParams) ([]model.ProductList, error)
@@ -24,6 +33,55 @@ type ProductRepository interface {
 
 type productdRepository struct {
 	db *gorm.DB
+}
+
+// DecreaseStock decreases the stock of a product
+func (p *productdRepository) DecreaseStock(productID string, quantity int) error {
+	// Construct the SQL query
+	sql := "UPDATE productlist SET stock = stock - ? WHERE id = ?"
+
+	// Execute the raw SQL query
+	result := p.db.Exec(sql, quantity, productID)
+	if result.Error != nil {
+		return result.Error
+	}
+
+	// Check if any rows were affected
+	if result.RowsAffected == 0 {
+		return errors.New("repository error")
+	}
+
+	return nil
+}
+
+// CheckAvailability checks if a product is available
+func (p *productdRepository) CheckAvailability(productID string) (bool, error) {
+	// Construct the SQL query
+	sql := "SELECT COUNT(*) FROM productlist WHERE id = ? AND is_available = true"
+
+	// Execute the raw SQL query
+	var count int64
+	result := p.db.Raw(sql, productID).Count(&count)
+	if result.Error != nil {
+		return false, result.Error
+	}
+
+	return count > 0, nil
+}
+
+// GetProductPrice retrieves the price of a product
+func (p *productdRepository) GetProductPrice(productID string) (int, error) {
+	// Construct the SQL query
+	sql := "SELECT price FROM productlist WHERE id = ?"
+
+	// Execute the raw SQL query
+	var price int
+	result := p.db.Raw(sql, productID).Scan(&price)
+	if result.Error != nil {
+		return 0, result.Error
+	}
+
+	return price, nil
 }
 
 func (p *productdRepository) UpdateProduct(requestData dto.RequestProduct, id string) error {

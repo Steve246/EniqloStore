@@ -30,7 +30,7 @@ func (p *userRegistrationUsecase) StaffRegister(reqUserData dto.RequestRegistBod
 	// validation check email already registered
 	exist := p.staffRepo.FindByPhone(reqUserData.PhoneNumber)
 	if exist {
-		return model.StaffResponse{}, utils.EmailFoundError()
+		return model.StaffResponse{}, utils.PhoneNumberFoundError()
 	}
 
 	// Hash the password

@@ -11,10 +11,28 @@ import (
 )
 
 type ProductController struct {
-	router    *gin.RouterGroup
-	routerDev *gin.RouterGroup
-	ucProduct usecase.ProductUsecase
+	router     *gin.RouterGroup
+	routerDev  *gin.RouterGroup
+	ucProduct  usecase.ProductUsecase
+	ucCustomer usecase.CustomerUsecase
 	api.BaseApi
+}
+
+func (u *ProductController) CheckoutCustomer(c *gin.Context) {
+	var bodyRequest dto.CheckoutRequest
+
+	if err := u.ParseRequestBody(c, &bodyRequest); err != nil {
+		u.Failed(c, utils.ReqBodyNotValidError())
+		return
+	}
+
+	err := u.ucCustomer.Checkout(bodyRequest)
+	if err != nil {
+		u.Failed(c, err)
+		return
+	}
+
+	u.Success(c, nil, "Successfully checked out product", "")
 }
 
 func (u *ProductController) UpdateProduct(c *gin.Context) {
@@ -150,7 +168,7 @@ func (u *ProductController) searchProduct(c *gin.Context) {
 	u.Success(c, res, "success", "")
 }
 
-func NewProductController(router *gin.RouterGroup, routerDev *gin.RouterGroup, ucProduct usecase.ProductUsecase) *ProductController {
+func NewProductController(router *gin.RouterGroup, routerDev *gin.RouterGroup, ucProduct usecase.ProductUsecase, ucCustomer usecase.CustomerUsecase) *ProductController {
 	controller := ProductController{
 		router:    router,
 		routerDev: routerDev,
@@ -159,6 +177,8 @@ func NewProductController(router *gin.RouterGroup, routerDev *gin.RouterGroup, u
 
 		BaseApi: api.BaseApi{},
 	}
+
+	router.POST("/v1/product/checkout", controller.CheckoutCustomer)
 
 	router.PUT("/v1/product/:id", controller.UpdateProduct)
 
