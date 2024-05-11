@@ -25,10 +25,10 @@ type Staff struct {
 }
 
 type StaffResponse struct {
-	UserUniqueID string `json:"user_unique_id"`
-	Name         string `gorm:"unique" json:"userName"`
+	UserUniqueID string `json:"userId"`
+	Name         string `gorm:"unique" json:"name"`
 	PhoneNumber  string `json:"phoneNumber"`
-	AccessToken  string `json:"accesToken"`
+	AccessToken  string `json:"accessToken"`
 }
 
 type Customer struct {
