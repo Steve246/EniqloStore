@@ -27,7 +27,7 @@ type productdRepository struct {
 }
 
 func (p *productdRepository) UpdateProduct(requestData dto.RequestProduct, id string) error {
-	result := p.db.Exec("UPDATE productlist SET name = ?, sku = ?, category = ?, notes = ?, imageUrl = ?, price = ?, stock = ?, location = ?, isavailable = ? WHERE id = ?", requestData.Name, requestData.SKU, requestData.Category, requestData.Notes, requestData.ImageURL, requestData.Price, requestData.Stock, requestData.Location, requestData.IsAvailable, id)
+	result := p.db.Exec("UPDATE productlist SET name = ?, sku = ?, category = ?, notes = ?, imageUrl = ?, price = ?, stock = ?, location = ?, isavailable = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?", requestData.Name, requestData.SKU, requestData.Category, requestData.Notes, requestData.ImageURL, requestData.Price, requestData.Stock, requestData.Location, requestData.IsAvailable, id)
 	if result.RowsAffected == 0 {
 		return utils.GetProductError()
 	}
@@ -35,7 +35,7 @@ func (p *productdRepository) UpdateProduct(requestData dto.RequestProduct, id st
 }
 
 func (p *productdRepository) DeleteProduct(id string) error {
-	result := p.db.Exec("DELETE FROM productlist WHERE id = ?", id)
+	result := p.db.Exec("UPDATE productlist SET deleted_at = CURRENT_TIMESTAMP WHERE id = ?", id)
 	if result.RowsAffected == 0 {
 		return utils.ProductsNotFound()
 	}
@@ -45,7 +45,7 @@ func (p *productdRepository) DeleteProduct(id string) error {
 func (p *productdRepository) GetProduct(getReqdata dto.ProductQueryParams) ([]model.ProductList, error) {
 	var products []model.ProductList
 
-	query := "SELECT * FROM productlist WHERE 1=1"
+	query := "SELECT * FROM productlist WHERE 1=1 AND deleted_at IS NULL"
 
 	// Filter by ID
 	if getReqdata.ID != "" {
@@ -110,7 +110,7 @@ func (p *productdRepository) FindIdCreatedAtBy(requestData dto.RequestProduct) (
 
 	var product model.ProductList
 
-	p.db.Raw("SELECT * FROM ProductList WHERE name = ?", requestData.Name).Scan(&product)
+	p.db.Raw("SELECT * FROM ProductList WHERE deleted_at IS NULL AND name = ?", requestData.Name).Scan(&product)
 
 	if (product == model.ProductList{}) {
 		return model.ProductList{}, errors.New("Product Not Found")
@@ -222,7 +222,7 @@ func generateQuery(params map[string]string) string {
 func (p *productdRepository) SearchProduct(params map[string]string) ([]model.ProductList, error) {
 	var product []model.ProductList
 	additionalQuery := generateQuery(params)
-	result := p.db.Raw(`SELECT id,name,sku,category,imageUrl,stock,price,location,created_at FROM productlist WHERE LOWER(name) LIKE ?`+additionalQuery, generateLikeQuery(params["name"])).Scan(&product)
+	result := p.db.Raw(`SELECT id,name,sku,category,imageUrl,stock,price,location,created_at FROM productlist WHERE deleted_at IS NULL AND LOWER(name) LIKE ?`+additionalQuery, generateLikeQuery(params["name"])).Scan(&product)
 	return product, result.Error
 }
 
