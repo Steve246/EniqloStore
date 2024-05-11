@@ -6,7 +6,7 @@ Uniqlo is an markeplace inventory system that allow customer to buy products, an
 
 ## 📜Table of Contents
 
-- [Cats Socials - Tree Planting Backend](#cats-social)
+- [Uniqlo Inventory System](#Uniqlo)
   - [📜Table of Contents](#table-of-contents)
   - [🔍Requirements](#requirements)
   - [🛠️Installation](#️installation)
