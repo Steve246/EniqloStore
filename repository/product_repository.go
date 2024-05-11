@@ -13,6 +13,7 @@ import (
 )
 
 type ProductRepository interface {
+	UpdateProduct(requestData dto.RequestProduct, id string) error
 	DeleteProduct(id string) error
 	GetProduct(getReqdata dto.ProductQueryParams) ([]model.ProductList, error)
 	FindIdCreatedAtBy(requestData dto.RequestProduct) (model.ProductList, error)
@@ -23,6 +24,14 @@ type ProductRepository interface {
 
 type productdRepository struct {
 	db *gorm.DB
+}
+
+func (p *productdRepository) UpdateProduct(requestData dto.RequestProduct, id string) error {
+	result := p.db.Exec("UPDATE products SET name = ?, sku = ?, category = ?, notes = ?, imageUrl = ?, price = ?, stock = ?, location = ?, isAvailable = ? WHERE id = ?", requestData.Name, requestData.SKU, requestData.Category, requestData.Notes, requestData.ImageURL, requestData.Price, requestData.Stock, requestData.Location, requestData.IsAvailable, id)
+	if result.RowsAffected == 0 {
+		return utils.GetProductError()
+	}
+	return nil
 }
 
 func (p *productdRepository) DeleteProduct(id string) error {
