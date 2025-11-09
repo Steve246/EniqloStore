@@ -1,6 +1,6 @@
-# Uniqlo 
+# Eniqlo 
 
-Uniqlo is an markeplace inventory system that allow customer to buy products, and staff to add product inside the system
+Eniqlo is an markeplace inventory system that allow customer to buy products, and staff to add product inside the system
 
 ![Unqilo](UniqloImage.jpg)
 
